@@ -17,19 +17,22 @@ public class ClientDTO implements Serializable{
 	private Double income;
 	private Instant birthDate;
 	private Integer children;
+	private String email;
+	private String password;
 	
 	public ClientDTO() {
 	}
-	
-	public ClientDTO(Long id, String name, String cpf, Double income, Instant birthDate, Integer children) {
-		this.id = id;
+
+	public ClientDTO(String name, String cpf, Double income, Instant birthDate, Integer children, String email, String password) {
 		this.name = name;
 		this.cpf = cpf;
 		this.income = income;
 		this.birthDate = birthDate;
 		this.children = children;
+		this.email = email;
+		this.password = password;
 	}
-	
+
 	public ClientDTO(Client entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
@@ -87,6 +90,14 @@ public class ClientDTO implements Serializable{
 		this.children = children;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -111,6 +122,5 @@ public class ClientDTO implements Serializable{
 			return false;
 		return true;
 	}
-	
-		
+
 }

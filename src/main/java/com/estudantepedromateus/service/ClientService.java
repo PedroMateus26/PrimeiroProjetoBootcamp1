@@ -11,6 +11,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +27,7 @@ import com.estudantepedromateus.repositories.ClientRepository;
 
 
 @Service
-public class ClientService {
+public class ClientService implements UserDetailsService {
 
 	@Autowired
 	public ClientRepository repository;
@@ -76,11 +81,21 @@ public class ClientService {
 
 	
 	private Client makeEntity(ClientDTO dto, Client entity) {
+		BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+		entity.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
 		entity.setName(dto.getName());
 		entity.setCpf(dto.getCpf());
 		entity.setIncome(dto.getIncome());
 		entity.setChildren(dto.getChildren());
 		entity.setBirthDate(dto.getBirthDate());
+		entity.setEmail(dto.getEmail());
 		return entity;
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+		Client client = repository.findByEmail(s).orElseThrow(()->new UsernameNotFoundException("Client not found"));
+		return client;
+	}
+
 }
